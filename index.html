@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"/>
+<title>🪸 Catatan Tabungan Laut Pastel</title>
+<meta name="theme-color" content="#cfefff">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#cfefff;
+  --card:#d2e2f8b2; /* lebih transparan */
+  --text:#07243d;
+  --muted:#4964ad;
+  --accent:#4964ad;
+  --accent2:#4964ad;
+  --danger:#4964ad;
+  --success:#4964ad;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:"Fredoka One", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Noto Sans", Arial;
+  color:var(--text);
+  background-color: var(--bg);
+  overflow-x:hidden;
+  background-image: url('bg1.jpg'); /* ganti dengan nama file kamu */
+  background-size: cover;       /* supaya menutupi layar */
+  background-position: center;  /* supaya center */
+  background-repeat: no-repeat;
+}
+
+.ocean{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+}
+
+.fish{
+  position:absolute; width:80px; height:80px; z-index:10; opacity:.9;
+  animation: swim 22s linear infinite;
+}
+.fish.small{ width:36px; height:36px; animation-duration:28s; opacity:.8; }
+.fish.tiny{ width:28px; height:28px; animation-duration:35s; opacity:.7; }
+
+@keyframes swim{
+  0%  { transform: translateX(-20vw) translateY(0) scale(1) }
+  25% { transform: translateX(30vw) translateY(-2vh) scale(1.03) }
+  50% { transform: translateX(70vw) translateY(2vh) scale(1) }
+  75% { transform: translateX(110vw) translateY(-1vh) scale(1.02) }
+  100%{ transform: translateX(150vw) translateY(0) scale(1) }
+}
+
+.jelly{
+  position:absolute; width:80px; height:100px; opacity:.85; z-index:10;
+  animation: floaty 8s ease-in-out infinite;
+}
+@keyframes floaty{
+  0%,100%{ transform: translateY(0) }
+  50%{ transform: translateY(-18px) }
+}
+
+.app{
+  position:relative; z-index:1; padding:16px 12px 28px;
+  min-height:100dvh; display:flex; align-items:center; justify-content:center;
+}
+.card{
+  width:100%; max-width:480px; margin:auto; background: var(--card);
+  backdrop-filter: blur(6px); border:1px solid rgba(0,0,0,.1);
+  border-radius:20px; padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.1);
+  font-family: 'Fredoka One', cursive;
+  z-index: 0;
+}
+.header{ display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.title{ display:flex; align-items:center; gap:10px; }
+.title h1{ font-size:20px; margin:0; letter-spacing:.2px }
+.target{ font-size:12px; color:var(--muted) }
+
+.progress{ margin:10px 0 14px; display:flex; align-items:center; gap:12px; }
+.ring{ width:86px; height:86px; position:relative; }
+.ring svg{ transform: rotate(-90deg) }
+.ring .center{ position:absolute; inset:0; display:grid; place-items:center; text-align:center; font-weight:700; font-size:12px; line-height:1.1; font-family: 'Fredoka One', cursive; }
+.stats{ flex:1; display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:13px; }
+.stat{ background: rgba(255,255,255,.1); border-radius:12px; padding:10px; font-family: 'Fredoka One', cursive; }
+.stat b{ display:block; font-size:13px; color:var(--accent2) }
+.stat span{ font-size:12px; color:var(--muted) }
+
+.form{ display:grid; grid-template-columns:1fr; gap:10px; margin-top:6px; }
+.row{ display:flex; gap:10px; }
+input, button, textarea{
+  width:100%; padding:12px 13px; border-radius:12px; border:1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.3); color:var(--text); font-size:16px; font-family: 'Fredoka One', cursive;
+}
+input::placeholder, textarea::placeholder{ color:#9b9b9b }
+textarea{ min-height:64px; resize:vertical }
+.btn{ border:none; font-weight:700; letter-spacing:.2px; cursor:pointer; touch-action: manipulation; transition: transform .05s ease, filter .2s; font-family: 'Fredoka One', cursive; }
+.btn:active{ transform: translateY(1px) }
+.primary{ background: var(--accent); color:#07243d }
+.ghost{ background: rgba(255,255,255,.2) }
+.danger{ background: var(--danger); color:#fff }
+
+.list{ margin-top:14px; display:flex; flex-direction:column; gap:8px; max-height:40vh; overflow:auto; -webkit-overflow-scrolling: touch; font-family: 'Fredoka One', cursive; }
+.item{ display:flex; justify-content:space-between; gap:8px; align-items:center; padding:10px; background: rgba(255,255,255,.08); border-radius:12px; }
+.item .left{ min-width:0 }
+.item .amt{ font-weight:800 }
+.item .note{ color:var(--muted); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:56vw }
+.item .time{ font-size:11px; color:#9b9b9b; margin-top:3px }
+
+.actions{ display:flex; gap:10px; margin-top:8px }
+.tip{ color:#6b7c93; font-size:12px; margin-top:8px; }
+
+#confetti{ position: fixed; inset:0; z-index:3; pointer-events:none }
+
+.ocean, .fish, .jelly { pointer-events:none }
+.bubble{
+  position:absolute;
+  bottom:-20px;
+  border-radius:50%;
+  opacity:0.6;
+  background: rgba(255,255,255,0.4);
+  pointer-events:none;
+  animation: floatUp linear infinite;
+  z-index: 10;
+}
+@keyframes floatUp{
+  0%{ transform: translateY(0) scale(1) }
+  100%{ transform: translateY(-110vh) scale(0.6) }
+}
+
+.app{ padding-bottom: max(28px, env(safe-area-inset-bottom)); padding-top: max(12px, env(safe-area-inset-top)); }
+
+/* Kata penyemangat kecil */
+.toast{
+  position:absolute;
+  left:50%; top:50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.6);
+  padding:8px 12px;
+  border-radius:12px;
+  font-size:14px;
+  font-family: 'Fredoka One', cursive;
+  color:#8971f1;
+  pointer-events:none;
+  opacity:0;
+  transition: opacity 0.3s, transform 0.3s;
+  z-index:2;
+}
+.toast.show{
+  opacity:1;
+  transform: translate(-50%, -50%) scale(1.1);
+}
+</style>
+</head>
+<body>
+<div class="ocean" aria-hidden="true">
+  <!-- Ganti PNG ikan / ubur -->
+  <img src="kura.png" class="fish" style="top:20vh; left:-10vw">
+  <img src="ubur2.png" class="fish small" style="top:40vh; left:-15vw">
+  <img src="pink.png" class="jelly" style="left:10vw; top:15vh">
+  <img src="ubur2.png" class="jelly" style="left:70vw; top:30vh; transform: scale(.9)">
+
+  <div class="bubble" style="width:12px; height:12px; left:10%; animation-duration:12s;"></div>
+<div class="bubble" style="width:8px; height:8px; left:30%; animation-duration:10s;"></div>
+<div class="bubble" style="width:16px; height:16px; left:50%; animation-duration:14s;"></div>
+<div class="bubble" style="width:10px; height:10px; left:70%; animation-duration:11s;"></div>
+<div class="bubble" style="width:14px; height:14px; left:85%; animation-duration:13s;"></div>
+<div class="bubble" style="width:30px; height:30px; left:10%; animation-duration:14s;"></div>
+<div class="bubble" style="width:25px; height:25px; left:35%; animation-duration:16s;"></div>
+<div class="bubble" style="width:40px; height:40px; left:55%; animation-duration:15s;"></div>
+<div class="bubble" style="width:28px; height:28px; left:75%; animation-duration:13s;"></div>
+<div class="bubble" style="width:32px; height:32px; left:85%; animation-duration:17s;"></div>
+<div class="bubble" style="width:12px; height:12px; left:10%; animation-duration:12s;"></div>
+<div class="bubble" style="width:8px; height:8px; left:30%; animation-duration:10s;"></div>
+<div class="bubble" style="width:16px; height:16px; left:50%; animation-duration:14s;"></div>
+<div class="bubble" style="width:10px; height:10px; left:70%; animation-duration:11s;"></div>
+<div class="bubble" style="width:14px; height:14px; left:85%; animation-duration:13s;"></div>
+<div class="bubble" style="width:30px; height:30px; left:10%; animation-duration:14s;"></div>
+<div class="bubble" style="width:25px; height:25px; left:35%; animation-duration:16s;"></div>
+<div class="bubble" style="width:40px; height:40px; left:55%; animation-duration:15s;"></div>
+<div class="bubble" style="width:28px; height:28px; left:75%; animation-duration:13s;"></div>
+<div class="bubble" style="width:32px; height:32px; left:85%; animation-duration:17s;"></div>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<main class="app">
+  <section class="card" role="region" aria-label="Catatan tabungan">
+    <div class="header">
+      <div class="title">
+        <span style="font-size:22px">🪼</span>
+        <div>
+          <h1>Tabungan Laut Mayu</h1>
+          <div class="target">Target: <b id="targetLabel">Rp 4.000.000</b></div>
+        </div>
+      </div>
+      <button class="btn ghost" id="btnShare">Bagikan</button>
+    </div>
+
+    <div class="progress" aria-live="polite">
+      <div class="ring" aria-hidden="true">
+        <svg width="86" height="86" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="42" stroke="rgba(0,0,0,.1)" stroke-width="12" fill="none"/>
+          <circle id="ringProg" cx="50" cy="50" r="42" stroke="url(#grad)" stroke-width="12" stroke-linecap="round" fill="none" stroke-dasharray="264" stroke-dashoffset="264"/>
+          <defs>
+            <linearGradient id="grad" x1="0" x2="1">
+              <stop offset="0%" stop-color="#4964ad"/>
+              <stop offset="100%" stop-color="#4964ad"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="center"><div id="pctText">0%</div></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><b id="savedLabel">Rp 0</b><span>Terkumpul</span></div>
+        <div class="stat"><b id="remainLabel">Rp 4.000.000</b><span>Sisa</span></div>
+      </div>
+    </div>
+
+    <form class="form" id="form">
+      <div class="row">
+        <input id="amount" type="number" inputmode="numeric" step="1000" min="0" placeholder="Nabung"/>
+        <button type="submit" class="btn primary" id="btnAdd">+ Tambah</button>
+      </div>
+      <textarea id="note" placeholder="Catatan (opsional)"></textarea>
+    </form>
+
+    <div class="list" id="list" aria-label="Daftar catatan"></div>
+
+    <div class="actions">
+      <button class="btn ghost" id="btnUndo">↶ Urungkan</button>
+      <button class="btn danger" id="btnReset">Reset</button>
+    </div>
+    <div class="tip">Tips: tekan <b>Bagikan</b> untuk share progres. Data otomatis tersimpan di perangkat.</div>
+  </section>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ====== Config ======
+const TARGET=4000000;
+const KEY='tabunganLautPastel';
+let state={target:TARGET, items:[], history:[]};
+const idr=new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0});
+const pad2=n=>String(n).padStart(2,'0');
+function nowStr(){ const d=new Date(); return `${pad2(d.getDate())}-${pad2(d.getMonth()+1)}-${d.getFullYear()} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`; }
+
+function load(){ try{ const raw=localStorage.getItem(KEY); if(raw){ const obj=JSON.parse(raw); if(obj && Array.isArray(obj.items)) state={target:obj.target||TARGET, items:obj.items, history:[]}; } }catch(e){} }
+function save(){ localStorage.setItem(KEY,JSON.stringify({target:state.target, items:state.items})); }
+function total(){ return state.items.reduce((a,b)=>a+(b.amount||0),0); }
+
+// ====== UI Update ======
+const ring=document.getElementById('ringProg');
+const pctText=document.getElementById('pctText');
+const savedLabel=document.getElementById('savedLabel');
+const remainLabel=document.getElementById('remainLabel');
+const targetLabel=document.getElementById('targetLabel');
+const list=document.getElementById('list');
+const CIRC=2*Math.PI*42;
+const toast=document.getElementById('toast');
+
+const encouragements=[
+  "Yay! Kamu keren 🐠",
+  "Terus menabung! 🌸",
+  "Mantap jiwa! 🪼",
+  "Ubur-ubur juga bangga! 🐙",
+  "Semangat terus! 💖",
+  "Koin menari! ✨",
+  "Besar nanti ini! 🐟"
+];
+
+function showToast(){
+  const txt=encouragements[Math.floor(Math.random()*encouragements.length)];
+  toast.textContent=txt;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),1200);
+}
+
+function update(){
+  const t=total();
+  const pct=Math.max(0,Math.min(100,Math.round((t/state.target)*100)));
+  ring.setAttribute('stroke-dasharray', CIRC.toFixed(1));
+  ring.setAttribute('stroke-dashoffset',(CIRC*(1-pct/100)).toFixed(1));
+  pctText.textContent=pct+'%';
+  savedLabel.textContent=idr.format(t);
+  remainLabel.textContent=idr.format(Math.max(0,state.target-t));
+  targetLabel.textContent=idr.format(state.target);
+
+  list.innerHTML='';
+  if(state.items.length===0){
+    const empty=document.createElement('div'); empty.className='item';
+    empty.innerHTML='<div class="left"><div class="note">Belum ada catatan, yuk mulai menabung ✨</div></div>';
+    list.appendChild(empty);
+  }else{
+    state.items.slice().reverse().forEach((it,idxRev)=>{
+      const div=document.createElement('div'); div.className='item';
+      const left=document.createElement('div'); left.className='left';
+      const amt=document.createElement('div'); amt.className='amt'; amt.textContent=idr.format(it.amount);
+      const note=document.createElement('div'); note.className='note'; note.textContent=it.note||'—';
+      const time=document.createElement('div'); time.className='time'; time.textContent=it.time;
+      left.appendChild(amt); left.appendChild(note); left.appendChild(time);
+      const del=document.createElement('button'); del.className='btn ghost'; del.style.width='88px'; del.textContent='Hapus';
+      del.addEventListener('click',()=>{ const trueIndex=state.items.length-1-idxRev; state.history.push({action:'delete', item:state.items[trueIndex], index:trueIndex}); state.items.splice(trueIndex,1); save(); update(); });
+      div.appendChild(left); div.appendChild(del); list.appendChild(div);
+    });
+  }
+}
+
+// ====== Form actions ======
+const form=document.getElementById('form');
+const amountInput=document.getElementById('amount');
+const noteInput=document.getElementById('note');
+const btnUndo=document.getElementById('btnUndo');
+const btnReset=document.getElementById('btnReset');
+const btnShare=document.getElementById('btnShare');
+
+form.addEventListener('submit',(e)=>{
+  e.preventDefault();
+  const val=parseInt(amountInput.value);
+  if(isNaN(val)||val<=0) return alert('Masukkan nominal yang benar');
+  const note=noteInput.value.trim();
+  const item={amount:val,note,time:nowStr()};
+  state.items.push(item);
+  state.history.push({action:'add', item});
+  save();
+  update();
+  showToast(); // tampilkan kata penyemangat
+  amountInput.value=''; noteInput.value=''; amountInput.focus();
+});
+
+btnUndo.addEventListener('click',()=>{ const h=state.history.pop(); if(!h) return; if(h.action==='add') state.items.pop(); if(h.action==='delete') state.items.splice(h.index,0,h.item); save(); update(); });
+btnReset.addEventListener('click',()=>{ if(confirm('Yakin ingin reset semua catatan?')){ state.items=[]; state.history=[]; save(); update(); } });
+btnShare.addEventListener('click',()=>{ const t=total(); alert(`Tabungan terkumpul ${idr.format(t)} dari target ${idr.format(state.target)}\nProgress ${Math.round(t/state.target*100)}%`); });
+
+// ====== Confetti ======
+const confettiCanvas=document.getElementById('confetti');
+function resizeCanvas(){ confettiCanvas.width=window.innerWidth; confettiCanvas.height=window.innerHeight; }
+window.addEventListener('resize', resizeCanvas); resizeCanvas();
+function burstConfetti(){
+  if(window.confettiFired) return; window.confettiFired=true;
+  confetti({ particleCount:150, spread:70, origin:{y:0.6}, colors:['#ffd1dc','#ffb3b3','#41e2a0','#cfefff','#a8e0ff'] });
+}
+function confetti(opts){ const js=document.createElement('script'); js.src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"; js.onload=()=>{ window.confetti(opts); }; document.head.appendChild(js); }
+
+// ====== Boot ======
+load(); update();
+</script>
+</body>
+</html>
