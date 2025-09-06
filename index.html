@@ -9,7 +9,7 @@
 <style>
 :root{
   --bg:#cfefff;
-  --card:#d2e2f8b2; /* lebih transparan */
+  --card:#d2e2f800; /* lebih transparan */
   --text:#07243d;
   --muted:#4964ad;
   --accent:#4964ad;
@@ -126,6 +126,21 @@ textarea{ min-height:64px; resize:vertical }
   0%{ transform: translateY(0) scale(1) }
   100%{ transform: translateY(-110vh) scale(0.6) }
 }
+.sparkle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: twinkle 3s infinite ease-in-out;
+  box-shadow: 0 0 8px rgba(255,255,255,0.9);
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.5); }
+  50%      { opacity: 1; transform: scale(1.2); }
+}
 
 .app{ padding-bottom: max(28px, env(safe-area-inset-bottom)); padding-top: max(12px, env(safe-area-inset-top)); }
 
@@ -159,7 +174,7 @@ textarea{ min-height:64px; resize:vertical }
   <img src="pink.png" class="jelly" style="left:10vw; top:15vh">
   <img src="ubur2.png" class="jelly" style="left:70vw; top:30vh; transform: scale(.9)">
 
-  <div class="bubble" style="width:12px; height:12px; left:10%; animation-duration:12s;"></div>
+<div class="bubble" style="width:12px; height:12px; left:10%; animation-duration:12s;"></div>
 <div class="bubble" style="width:8px; height:8px; left:30%; animation-duration:10s;"></div>
 <div class="bubble" style="width:16px; height:16px; left:50%; animation-duration:14s;"></div>
 <div class="bubble" style="width:10px; height:10px; left:70%; animation-duration:11s;"></div>
@@ -179,6 +194,33 @@ textarea{ min-height:64px; resize:vertical }
 <div class="bubble" style="width:40px; height:40px; left:55%; animation-duration:15s;"></div>
 <div class="bubble" style="width:28px; height:28px; left:75%; animation-duration:13s;"></div>
 <div class="bubble" style="width:32px; height:32px; left:85%; animation-duration:17s;"></div>
+ <div class="bubble" style="left:10%; width:60px; height:60px; animation-duration:12s;"></div>
+  <div class="bubble" style="left:25%; width:50px; height:50px; animation-duration:15s; animation-delay:2s;"></div>
+  <div class="bubble" style="left:40%; width:70px; height:70px; animation-duration:18s; animation-delay:4s;"></div>
+
+  <!-- Bubble sedang -->
+  <div class="bubble" style="left:55%; width:40px; height:40px; animation-duration:10s; animation-delay:1s;"></div>
+  <div class="bubble" style="left:70%; width:45px; height:45px; animation-duration:14s; animation-delay:3s;"></div>
+
+  <!-- Bubble kecil -->
+  <div class="bubble" style="left:80%; width:25px; height:25px; animation-duration:20s; animation-delay:5s;"></div>
+  <div class="bubble" style="left:90%; width:30px; height:30px; animation-duration:22s; animation-delay:7s;"></div>
+
+  <div class="sparkle" style="top:20%; left:15%; animation-delay:0s;"></div>
+  <div class="sparkle" style="top:40%; left:30%; animation-delay:1s;"></div>
+  <div class="sparkle" style="top:60%; left:50%; animation-delay:2s;"></div>
+  <div class="sparkle" style="top:30%; left:70%; animation-delay:0.5s;"></div>
+  <div class="sparkle" style="top:50%; left:85%; animation-delay:1.5s;"></div>
+  <div class="sparkle" style="top:20%; left:15%; animation-delay:0s;"></div>
+  <div class="sparkle" style="top:40%; left:30%; animation-delay:1s;"></div>
+  <div class="sparkle" style="top:60%; left:50%; animation-delay:2s;"></div>
+  <div class="sparkle" style="top:30%; left:70%; animation-delay:0.5s;"></div>
+  <div class="sparkle" style="top:50%; left:85%; animation-delay:1.5s;"></div>
+  <div class="sparkle" style="top:20%; left:15%; animation-delay:0s;"></div>
+  <div class="sparkle" style="top:40%; left:30%; animation-delay:1s;"></div>
+  <div class="sparkle" style="top:60%; left:50%; animation-delay:2s;"></div>
+  <div class="sparkle" style="top:30%; left:70%; animation-delay:0.5s;"></div>
+  <div class="sparkle" style="top:50%; left:85%; animation-delay:1.5s;"></div>
 </div>
 
 <canvas id="confetti"></canvas>
